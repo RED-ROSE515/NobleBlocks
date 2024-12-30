@@ -25,3 +25,6 @@ NobleBlocks 配置文件.json
 build/
 dist/
 *.spec
+
+# Ignore secrets file
+app/common/secrets.py

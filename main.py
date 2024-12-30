@@ -3,6 +3,7 @@ import os
 import sys
 
 from PySide6.QtWidgets import QApplication
+from PySide6.QtGui import QIcon
 from qfluentwidgets import qconfig
 
 from app.common.config import cfg
@@ -28,6 +29,16 @@ else:
 
 app = QApplication(sys.argv)
 
+# Set application icon
+if getattr(sys, 'frozen', False):
+    # If the application is run as a bundle (frozen)
+    application_path = sys._MEIPASS
+else:
+    # If the application is run from a Python interpreter
+    application_path = os.path.dirname(os.path.abspath(__file__))
+
+icon_path = os.path.join(application_path, "images", "logo.ico")
+app.setWindowIcon(QIcon(icon_path))
 
 from PySide6.QtCore import QSharedMemory
 
@@ -51,23 +62,13 @@ if sharedMemory.attach():
 
 sharedMemory.create(1)
 
-
-import time
 import warnings
 
 import darkdetect
 
-from PySide6.QtGui import QColor
-
 from loguru import logger
 from qframelesswindow.utils import getSystemAccentColor
-
 from qfluentwidgets import setTheme, Theme, setThemeColor
-
-
-import Res_rc
-
-from app.common.methods import loadPlugins
 from app.view.main_window import MainWindow
 
 
@@ -79,26 +80,9 @@ setTheme(Theme.DARK if darkdetect.isDark() else Theme.LIGHT, save=False)
 
 if sys.platform == "win32" or "darwin":
     setThemeColor(getSystemAccentColor(), save=False)
-if sys.platform == "linux":
-
-    if 'KDE_SESSION_UID' in os.environ: # KDE Plasma
-
-        import configparser
-        config = configparser.ConfigParser()
-
-        config.read(f"/home/{os.getlogin()}/.config/kdeglobals")
-
-        # 获取 DecorationFocus 的值
-        if 'Colors:Window' in config:
-            color = list(map(int, config.get('Colors:Window', 'DecorationFocus').split(",")))
-            setThemeColor(QColor(*color))
 
 
 w = MainWindow()
-
-
-pluginsPath=os.path.join(cfg.appPath, "plugins")
-loadPlugins(w, pluginsPath)
 
 try:  
     if "--silence" in sys.argv:

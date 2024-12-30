@@ -1,29 +1,12 @@
 # coding:utf-8
 import sys
-from re import compile
 
 from PySide6.QtCore import QDir, QRect
 from qfluentwidgets import (QConfig, ConfigItem, OptionsConfigItem, BoolValidator,
                             OptionsValidator, RangeConfigItem, RangeValidator,
                             FolderValidator, ConfigValidator, ConfigSerializer)
 
-
-class ProxyValidator(ConfigValidator):
-
-    PATTERN = compile(r'^(socks5|http|https):\/\/'
-                      r'((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}'
-                      r'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):'
-                      r'(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|[1-5]?[0-9]{1,4})$')
-
-    def validate(self, value: str) -> bool:
-        # 判断代理地址是否合法
-        # print(value, self.PATTERN.match(value))
-        return bool(self.PATTERN.match(value)) or value == "Auto" or value == "Off"
-
-    def correct(self, value) -> str:
-        return value if self.validate(value) else "Auto"
-
-class GeometryValidator(ConfigValidator):  # geometry 为程序的位置和大小, 保存为字符串 "x,y,w,h," 默认为 Default
+class GeometryValidator(ConfigValidator):  
     def validate(self, value: QRect) -> bool:
         if value == "Default":
             return True
@@ -33,7 +16,7 @@ class GeometryValidator(ConfigValidator):  # geometry 为程序的位置和大�
     def correct(self, value) -> str:
         return value if self.validate(value) else "Default"
 
-class GeometrySerializer(ConfigSerializer):  # 将字符串 "x,y,w,h," 转换为QRect (x, y, w, h), "Default" 除外
+class GeometrySerializer(ConfigSerializer):  
     def serialize(self, value: QRect) -> str:
         if value == "Default":
             return value
@@ -48,20 +31,14 @@ class GeometrySerializer(ConfigSerializer):  # 将字符串 "x,y,w,h," 转换为
 class Config(QConfig):
     """ Config of application """
     # download
-    maxReassignSize = RangeConfigItem("Download", "MaxReassignSize", 8, RangeValidator(1, 100))
     downloadFolder = ConfigItem(
         "Download", "DownloadFolder", QDir.currentPath(), FolderValidator())
 
     maxBlockNum = RangeConfigItem("Download", "MaxBlockNum", 8, RangeValidator(1, 256))
     autoSpeedUp = ConfigItem("Download", "AutoSpeedUp", True, BoolValidator())
-    proxyServer = ConfigItem("Download", "ProxyServer", "Auto", ProxyValidator())
-
-    # browser
-    enableBrowserExtension = ConfigItem("Browser", "EnableBrowserExtension", False, BoolValidator())
 
     # personalization
     if sys.platform == "win32":
-        # backgroundEffect = OptionsConfigItem("Personalization", "BackgroundEffect", "Mica", OptionsValidator(["Acrylic", "Mica", "MicaBlur", "MicaAlt", "Transparent", "Aero", "None"]))
         backgroundEffect = OptionsConfigItem("Personalization", "BackgroundEffect", "Mica", OptionsValidator(["Acrylic", "Mica", "MicaBlur", "MicaAlt", "Aero"]))
     dpiScale = OptionsConfigItem(
         "Personalization", "DpiScale", "Auto", OptionsValidator([1, 1.25, 1.5, 1.75, 2, "Auto"]), restart=True)
@@ -69,8 +46,7 @@ class Config(QConfig):
     # software
     checkUpdateAtStartUp = ConfigItem("Software", "CheckUpdateAtStartUp", True, BoolValidator())
     autoRun = ConfigItem("Software", "AutoRun", False, BoolValidator())
-    geometry = ConfigItem("Software", "Geometry", "Default", GeometryValidator(), GeometrySerializer())  # 保存程序的位置和大小, Validator 在 mainWindow 中设置
-    # 程序运行路径
+    geometry = ConfigItem("Software", "Geometry", "Default", GeometryValidator(), GeometrySerializer())  
     appPath = "./"
 
 

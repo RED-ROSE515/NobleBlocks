@@ -12,7 +12,8 @@ from qfluentwidgets import FluentIcon as FIF, setTheme, Theme
 from qfluentwidgets import NavigationItemPosition, MSFluentWindow, SplashScreen
 
 from .setting_interface import SettingInterface
-from .paper_interface import PaperInterface
+from .paper_manage_interface import PaperManageInterface
+from .paper_check_interface import PaperCheckInterface
 from ..common.config import cfg
 
 
@@ -47,7 +48,8 @@ class MainWindow(MSFluentWindow):
 
         # create sub interface
         self.settingInterface = SettingInterface(self)
-        self.paperInterface = PaperInterface(self)
+        self.PaperManageInterface = PaperManageInterface(self)
+        self.PaperCheckInterface = PaperCheckInterface(self)
 
         # add items to navigation interface
         self.initNavigation()
@@ -64,7 +66,8 @@ class MainWindow(MSFluentWindow):
 
     def initNavigation(self):
         # add navigation items
-        self.addSubInterface(self.paperInterface, FIF.DOWNLOAD, "Paper Fetch")
+        self.addSubInterface(self.PaperManageInterface, FIF.DOWNLOAD, "Paper Fetch")
+        self.addSubInterface(self.PaperCheckInterface, FIF.CHECKBOX, "Paper Check")
         self.addSubInterface(self.settingInterface, FIF.SETTING, "Settings", position=NavigationItemPosition.BOTTOM)
         
 

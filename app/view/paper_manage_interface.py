@@ -6,13 +6,13 @@ from qfluentwidgets import (FluentIcon as FIF, SmoothScrollArea, TitleLabel,
 from ..components.del_dialog import DelDialog
 from ..common.config import PAGE, DOWN_DIR, YEAR
 
-class PaperInterface(SmoothScrollArea):
-    """ Paper interface """
+class PaperManageInterface(SmoothScrollArea):
+    """ Paper Manage interface """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.setObjectName("TaskInterface")
+        self.setObjectName("PaperManageInterface")
         self.status = 'paused'
         self.process = QProcess()
         # Set process channel mode to merge stdout and stderr
