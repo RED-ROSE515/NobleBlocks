@@ -1,9 +1,7 @@
 # coding: utf-8
 import ctypes
 import sys
-from ast import literal_eval
 from ctypes import byref, c_int
-from pathlib import Path
 
 import darkdetect
 from PySide6.QtCore import QSize, QThread, Signal, QTimer, QPropertyAnimation
@@ -14,9 +12,8 @@ from qfluentwidgets import FluentIcon as FIF, setTheme, Theme
 from qfluentwidgets import NavigationItemPosition, MSFluentWindow, SplashScreen
 
 from .setting_interface import SettingInterface
+from .paper_interface import PaperInterface
 from ..common.config import cfg
-from ..common.custom_socket import GhostDownloaderSocketServer
-from ..common.signal_bus import signalBus
 
 
 class CustomSplashScreen(SplashScreen):
@@ -50,6 +47,7 @@ class MainWindow(MSFluentWindow):
 
         # create sub interface
         self.settingInterface = SettingInterface(self)
+        self.paperInterface = PaperInterface(self)
 
         # add items to navigation interface
         self.initNavigation()
@@ -66,7 +64,9 @@ class MainWindow(MSFluentWindow):
 
     def initNavigation(self):
         # add navigation items
+        self.addSubInterface(self.paperInterface, FIF.DOWNLOAD, "Paper Fetch")
         self.addSubInterface(self.settingInterface, FIF.SETTING, "Settings", position=NavigationItemPosition.BOTTOM)
+        
 
     def initWindow(self):
 
@@ -100,7 +100,7 @@ class MainWindow(MSFluentWindow):
         QApplication.processEvents()
 
     def toggleTheme(self, callback: str):
-        if callback == 'Dark':  # PySide6 特性，需要重试
+        if callback == 'Dark':  # PySide6
             setTheme(Theme.DARK, save=False)
             if cfg.backgroundEffect.value in ['Mica', 'MicaBlur', 'MicaAlt']:
                 QTimer.singleShot(100, self.applyBackgroundEffectByCfg)
@@ -112,7 +112,7 @@ class MainWindow(MSFluentWindow):
 
         self.applyBackgroundEffectByCfg()
 
-    def applyBackgroundEffectByCfg(self):  # 不应设置 _isMicaEnabled 的值
+    def applyBackgroundEffectByCfg(self):  
         if sys.platform == 'win32':
             self.windowEffect.removeBackgroundEffect(self.winId())
 

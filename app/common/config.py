@@ -74,13 +74,8 @@ class Config(QConfig):
     appPath = "./"
 
 
-YEAR = 2024
-AUTHOR = "XiaoYouChR"
-VERSION = "3.4.5"
-LATEST_EXTENSION_VERSION = "1.0.4"
-AUTHOR_URL = "https://space.bilibili.com/437313511"
-FEEDBACK_URL = "https://github.com/XiaoYouChR/Ghost-Downloader-3/issues"
-# RELEASE_URL = "https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/latest"
-
+YEAR = 2018
+DOWN_DIR = r"C:\Papers"
+PAGE = 3
 
 cfg = Config()
