@@ -1,4 +1,4 @@
-from qfluentwidgets import CheckBox, MessageBox
+from qfluentwidgets import MessageBox
 
 
 class DelDialog(MessageBox):
@@ -9,6 +9,3 @@ class DelDialog(MessageBox):
             parent=parent
         )
         self.setClosableOnMaskClicked(True)
-
-        self.checkBox = CheckBox("Delete Permanently", self)
-        self.textLayout.insertWidget(2, self.checkBox)

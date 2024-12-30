@@ -151,8 +151,7 @@ class PaperManageInterface(SmoothScrollArea):
         ]
         
         # Display the command that's being run
-        command = f"{program} {' '.join(arguments)}"
-        self.outputText.append(f"Executing command:\n{command}\n")
+        self.outputText.append(f"Start searching for papers and downloading...")
         
         # Set working directory and start the process
         self.process.setWorkingDirectory(DOWN_DIR)
@@ -166,10 +165,8 @@ class PaperManageInterface(SmoothScrollArea):
     def allDeleteTasks(self):
         dialog = DelDialog(self.window())
         if dialog.exec():
-            completely = dialog.checkBox.isChecked()
-            if completely:
-                self.outputText.clear()
-                if self.process.state() == QProcess.Running:
-                    self.process.terminate()
+            self.outputText.clear()
+            if self.process.state() == QProcess.Running:
+                self.process.terminate()
 
         dialog.deleteLater()
